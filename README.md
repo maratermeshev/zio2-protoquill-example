@@ -7,7 +7,7 @@ Simple example of using ZIO-ProtoQuill with some helpful scripts to automaticall
 2. Run the start script: `./start.sh`
 3. Compile and run the examples: `sbt 'example.module.Main'`
    ```
-   > sbt 'runMain quixotic.Main'
+   > sbt 'example.module.Main'
    List((Person(2,Vlad,Dracul,321),Address(2,Bran Castle,11111,Transylvania)), (Person(2,Vlad,Dracul,321),Address(2,Ambras Castle,11111,Innsbruck)))
    ```
 4. Stop the container `./stop.sh`
