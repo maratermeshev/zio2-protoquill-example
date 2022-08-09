@@ -13,6 +13,7 @@ lazy val `protoquill-example` = project
       "-language:implicitConversions",
     ),
     libraryDependencies ++= Seq(
+      // https://mvnrepository.com/artifact/io.getquill/quill-jdbc-zio
       "io.getquill" %% "quill-jdbc-zio" % "4.2.0",
       "org.postgresql"       %  "postgresql"     % "42.4.1"
     )
