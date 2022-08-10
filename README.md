@@ -1,4 +1,4 @@
-# Simple ZIO ProtoQuill Example
+# Simple ZIO ProtoQuill Example With Caliban. README is going to be updated.
 
 Simple example of using ZIO-ProtoQuill with some helpful scripts to automatically setup a postgres database.
 
