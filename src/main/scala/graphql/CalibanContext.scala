@@ -25,7 +25,7 @@ object CalibanContext extends zio.ZIOAppDefault :
           people =>
             productArgs => {
               val cols = quillColumns(people)
-              ZLayer.fromFunction(DataService(_)).getPeople(cols, productArgs.keyValues)
+              DataService.getPeople(cols, productArgs.keyValues)
             }
         )
       )
