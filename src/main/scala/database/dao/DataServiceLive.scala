@@ -22,10 +22,12 @@ final case class DataServiceLive(dataSource: DataSource) extends DataService {
         .take(10)
     }
 
-  def getPeople(columns: List[String], filters: Map[String, String]) =
+  def getPeople(columns: List[String], filters: Map[String, String]) = {
+    implicit val implicitDataSource: DataSource = dataSource
     println(s"Getting columns: $columns")
     run(getPeopleQ(columns, filters)).implicitDS.mapError(e => {
       logger.underlying.error("getPeopleQ query failed", e)
       e
     })
+  }
 }
