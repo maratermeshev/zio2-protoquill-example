@@ -11,8 +11,7 @@ import zio.Task
 
 object CalibanContext extends zio.ZIOAppDefault :
   case class Queries(
-                      getPeople: Field => ProductArgs[Person] => Task[List[Person]],
-                      getPeopleOlderThan: Field => ProductArgs[Person] => Task[List[Person]]
+                      getPeople: Field => ProductArgs[Person] => Task[List[Person]]
                     )
 
   val endpoints =
