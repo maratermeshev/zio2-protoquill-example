@@ -13,8 +13,13 @@ lazy val `protoquill-example` = project
       "-language:implicitConversions",
     ),
     libraryDependencies ++= Seq(
-      // https://mvnrepository.com/artifact/io.getquill/quill-jdbc-zio
       "io.getquill" %% "quill-jdbc-zio" % "4.2.0",
-      "org.postgresql"       %  "postgresql"     % "42.4.1"
+      "org.postgresql"       %  "postgresql"     % "42.3.6",
+      "com.github.ghostdogpr" %% "caliban" % "2.0.1",
+      "com.github.ghostdogpr" %% "caliban-zio-http"   % "2.0.1",
+      "ch.qos.logback" % "logback-classic" % "1.2.11" % Test,
+      "io.d11" %% "zhttp"      % "2.0.0-RC10" % Test,
+      "org.scalatest" %% "scalatest" % "3.2.12" % Test,
+      "org.scalatest" %% "scalatest-mustmatchers" % "3.2.12" % Test,
     )
   )
