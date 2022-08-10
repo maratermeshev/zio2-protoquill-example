@@ -8,6 +8,10 @@ import io.getquill.CalibanIntegration._
 import io.getquill.ProductArgs
 import models.Person
 import zio.Task
+import caliban.{RootResolver, ZHttpAdapter}
+import zhttp.http._
+import zhttp.service.Server
+import zio.ZLayer
 
 object CalibanContext extends zio.ZIOAppDefault :
   case class Queries(
@@ -21,14 +25,14 @@ object CalibanContext extends zio.ZIOAppDefault :
           people =>
             productArgs => {
               val cols = quillColumns(people)
-              DataService.getPeople(cols, productArgs.keyValues)
+              ZLayer.fromFunction(DataService(_)).getPeople(cols, productArgs.keyValues)
             }
         )
       )
     ).interpreter
 
   val myApp = for {
-//    _ <- DataService.resetDatabase()
+    //    _ <- DataService.resetDatabase()
     interpreter <- endpoints
     _ <- Server.start(
       port = 8088,
