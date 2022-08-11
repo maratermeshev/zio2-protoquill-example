@@ -15,7 +15,8 @@ import zio.ZLayer
 
 object CalibanContext extends zio.ZIOAppDefault :
   case class Queries(
-                      getPeople: Field => ProductArgs[Person] => Task[List[Person]]
+                      getPeople: Field => ProductArgs[Person] => Task[List[Person]],
+                      getPeoplePlan: Field => ProductArgs[Person] => Task[DataServiceLive.PersonPlanQuery]
                     )
 
   val endpoints =
@@ -25,7 +26,14 @@ object CalibanContext extends zio.ZIOAppDefault :
           people =>
             productArgs => {
               val cols = quillColumns(people)
-              DataService.getPeople(cols, productArgs.keyValues)
+              DataServiceLive.getPeople(cols, productArgs.keyValues)
+            },
+          peoplePlan =>
+            productArgs => {
+              val cols = quillColumns(peoplePlan)
+              (DataServiceLive.getPeoplePlan(cols, productArgs.keyValues) zip DataServiceLive.getPeople(cols, productArgs.keyValues)).map(
+                (pa, plan) => Dao.PersonAddressPlanQuery(pa, plan)
+              )
             }
         )
       )
