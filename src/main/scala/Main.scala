@@ -9,7 +9,7 @@ import zio.ZIOAppDefault
  */
 object Main extends ZIOAppDefault {
   def run =
-    DataService.getPeople
+    DataService.getPeople(List("name"), Map())
       .provide(QuillContext.dataSourceLayer, DataServiceLive.layer)
       .debug("Result")
       .exitCode

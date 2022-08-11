@@ -11,6 +11,8 @@ import io.getquill.context.qzio.ImplicitSyntax.Implicit
 
 object DataServiceLive {
   val layer = ZLayer.fromFunction(DataServiceLive(_))
+
+  case class PersonPlanQuery(plan: String, pa: List[Person])
 }
 
 final case class DataServiceLive(dataSource: DataSource) extends DataService {
@@ -18,8 +20,6 @@ final case class DataServiceLive(dataSource: DataSource) extends DataService {
   import QuillContext.*
 
   val env = ZLayer.succeed(dataSource)
-
-  case class PersonPlanQuery(plan: String, pa: List[Person])
 
   inline def getPeopleQ(inline columns: List[String], inline filters: Map[String, String]) =
     quote {
@@ -29,9 +29,11 @@ final case class DataServiceLive(dataSource: DataSource) extends DataService {
         .take(10)
     }
 
+  given Implicit[DataSource] = Implicit(dataSource)
+
   def getPeople(columns: List[String], filters: Map[String, String]) = {
     println(s"Getting columns: $columns")
-    run(getPeopleQ(columns, filters)).implicitDS(Implicit(dataSource)).mapError(e => {
+    run(getPeopleQ(columns, filters)).implicitDS.mapError(e => {
 //            logger.underlying.error("getPeople query failed", e)
       e
     })

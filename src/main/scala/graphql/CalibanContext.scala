@@ -1,39 +1,43 @@
 package graphql
 
 import caliban.GraphQL.graphQL
-import caliban.RootResolver
 import caliban.execution.Field
-import database.dao.DataService
-import io.getquill.CalibanIntegration._
+import caliban.schema.Schema
+import caliban.{RootResolver, ZHttpAdapter, schema}
+import database.dao.{DataService, DataServiceLive, QuillContext}
+import io.getquill.CalibanIntegration.*
 import io.getquill.ProductArgs
 import models.Person
-import zio.Task
-import caliban.{RootResolver, ZHttpAdapter}
-import zhttp.http._
+import zhttp.http.*
 import zhttp.service.Server
-import zio.ZLayer
+import zio.{Task, ZIO, ZLayer}
+
 
 object CalibanContext extends zio.ZIOAppDefault :
   case class Queries(
-                      getPeople: Field => ProductArgs[Person] => Task[List[Person]],
-                      getPeoplePlan: Field => ProductArgs[Person] => Task[DataServiceLive.PersonPlanQuery]
+                      getPeople: Field =>
+                        ProductArgs[Person] =>
+                          ZIO[DataServiceLive, Throwable, List[Person]],
+                      getPeoplePlan: Field =>
+                        ProductArgs[Person] =>
+                          ZIO[DataServiceLive, Throwable, DataServiceLive.PersonPlanQuery]
                     )
 
   val endpoints =
-    graphQL(
+    graphQL[DataServiceLive, Queries, Unit, Unit](
       RootResolver(
         Queries(
           people =>
             productArgs => {
               val cols = quillColumns(people)
-              DataServiceLive.getPeople(cols, productArgs.keyValues)
+              ZIO.serviceWithZIO[DataServiceLive](_.getPeople(cols, productArgs.keyValues))
             },
           peoplePlan =>
             productArgs => {
               val cols = quillColumns(peoplePlan)
-              (DataServiceLive.getPeoplePlan(cols, productArgs.keyValues) zip DataServiceLive.getPeople(cols, productArgs.keyValues)).map(
-                (pa, plan) => Dao.PersonAddressPlanQuery(pa, plan)
-              )
+              ZIO.serviceWithZIO[DataServiceLive](_.getPeoplePlan(cols, productArgs.keyValues))
+                .zip(ZIO.serviceWithZIO[DataServiceLive](_.getPeople(cols, productArgs.keyValues)))
+                .map((pa, plan) => DataServiceLive.PersonPlanQuery(pa, plan))
             }
         )
       )
@@ -52,6 +56,6 @@ object CalibanContext extends zio.ZIOAppDefault :
   } yield ()
 
   override def run =
-    myApp.exitCode
+    myApp.provide(DataServiceLive.layer, QuillContext.dataSourceLayer).exitCode
 
 end CalibanContext
