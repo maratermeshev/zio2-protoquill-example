@@ -1,3 +1,7 @@
+import sbt.Keys.testFrameworks
+
+lazy val zioVersion = "2.0.0"
+
 lazy val `protoquill-example` = project
   .in(file("."))
   .settings(
@@ -14,12 +18,18 @@ lazy val `protoquill-example` = project
     ),
     libraryDependencies ++= Seq(
       "io.getquill" %% "quill-jdbc-zio" % "4.2.0",
-      "org.postgresql"       %  "postgresql"     % "42.3.6",
+      "org.postgresql" % "postgresql" % "42.3.6",
       "com.github.ghostdogpr" %% "caliban" % "2.0.1",
-      "com.github.ghostdogpr" %% "caliban-zio-http"   % "2.0.1",
+      "com.github.ghostdogpr" %% "caliban-zio-http" % "2.0.1",
       "ch.qos.logback" % "logback-classic" % "1.2.11" % Test,
-      "io.d11" %% "zhttp"      % "2.0.0-RC10" % Test,
+      "io.d11" %% "zhttp" % "2.0.0-RC10" % Test,
       "org.scalatest" %% "scalatest" % "3.2.12" % Test,
       "org.scalatest" %% "scalatest-mustmatchers" % "3.2.12" % Test,
-    )
+      "dev.zio" %% "zio" % zioVersion,
+      "dev.zio" %% "zio-test" % zioVersion,
+      "dev.zio" %% "zio-test-sbt" % zioVersion,
+      "dev.zio" %% "zio-streams" % zioVersion,
+      "dev.zio" %% "zio-test-junit" % zioVersion
+    ),
+    testFrameworks += new TestFramework("zio.test.sbt.ZTestFramework")
   )

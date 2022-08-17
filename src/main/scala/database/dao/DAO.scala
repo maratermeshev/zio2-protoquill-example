@@ -9,13 +9,13 @@ import io.getquill.context.ZioJdbc.*
 import models.Person
 import io.getquill.context.qzio.ImplicitSyntax.Implicit
 
-object DataServiceLive {
-  val layer = ZLayer.fromFunction(DataServiceLive(_))
+object DAO {
+  val layer = ZLayer.fromFunction(DAO(_))
 
   case class PersonPlanQuery(plan: String, pa: List[Person])
 }
 
-final case class DataServiceLive(dataSource: DataSource) extends DataService {
+final case class DAO(dataSource: DataSource) extends DataService {
 
   import QuillContext.*
 
@@ -24,8 +24,8 @@ final case class DataServiceLive(dataSource: DataSource) extends DataService {
   inline def getPeopleQ(inline columns: List[String], inline filters: Map[String, String]) =
     quote {
       quillQuery[Person]
-        .filterColumns(columns)
         .filterByKeys(filters)
+        .filterColumns(columns)
         .take(10)
     }
 
