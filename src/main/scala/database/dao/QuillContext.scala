@@ -15,5 +15,5 @@ object QuillContext extends PostgresZioJdbcContext(SnakeCase) {
   val dataSourceLayer = Quill.DataSource.fromPrefix("myDatabaseConfig").orDie
   implicit val instantDecoder: MappedEncoding[Date, Instant] = MappedEncoding[Date, Instant](d => d.toInstant)
   implicit val instantEncoder: MappedEncoding[Instant, Date] = MappedEncoding[Instant, Date](i => Date.from(i))
-
+  
 }

@@ -7,6 +7,6 @@ case class Person(
                    name: String,
                    age: Int,
                    insuranceId: Option[Int],
-                   isInsured: Boolean,
+//                   isInsured: Option[Boolean],
                    createdAt: Instant
                  )
