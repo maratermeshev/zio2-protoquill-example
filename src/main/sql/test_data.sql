@@ -4,8 +4,8 @@ CREATE TABLE person
     name        VARCHAR(255),
     age         INT,
     insuranceId INT,
-    isInsured   boolean   DEFAULT false,
-    createdAt   timestamp DEFAULT now()
+    is_insured   boolean   DEFAULT false,
+    created_at   timestamp DEFAULT now()
 );
 
 INSERT INTO person(name, age, isInsured)
