@@ -18,7 +18,7 @@ object DAO {
 
 final case class DAO(dataSource: DataSource) extends DataService {
 
-  val logger = LoggerFactory.getLogger("DAO")
+//  val logger = LoggerFactory.getLogger("DAO")
 
   import QuillContext.*
 
@@ -36,8 +36,9 @@ final case class DAO(dataSource: DataSource) extends DataService {
 
   def getPeople(columns: List[String], filters: Map[String, String]) = {
     println(s"Getting columns: $columns")
+
     run(getPeopleQ(columns, filters)).implicitDS.mapError(e => {
-            logger.error("getPeople query failed", e)
+//            logger.error("getPeople query failed", e)
       e
     })
   }
@@ -50,7 +51,7 @@ final case class DAO(dataSource: DataSource) extends DataService {
 
   def getPeoplePlan(columns: List[String], filters: Map[String, String]) =
     run(plan(columns, filters), OuterSelectWrap.Never).map(_.mkString("\n")).implicitDS.mapError(e => {
-      logger.error("getPeoplePlan query failed", e)
+//      logger.error("getPeoplePlan query failed", e)
       e
     })
 }
