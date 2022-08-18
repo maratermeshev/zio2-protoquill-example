@@ -1,6 +1,6 @@
 package models
 
-import java.time.ZonedDateTime
+import java.time.Instant
 
 case class Person(
                    id: Int,
@@ -8,5 +8,5 @@ case class Person(
                    age: Int,
                    insuranceId: Option[Int],
                    isInsured: Boolean,
-                   createdAt: ZonedDateTime
+                   createdAt: Instant
                  )
